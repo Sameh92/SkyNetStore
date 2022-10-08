@@ -1,0 +1,50 @@
+- dotnet -h --->for help
+
+- dotnet new -h ---> for help for new command
+
+- dotnet sln -h --->for help for sln
+
+- dotnet new -l ---> to see a list of template 
+
+- dotnet new webapi -o projectName --framework "net5.0"
+
+- dotnet sln add projectname
+
+- dotnet sln list
+
+- dotnet dev-certs https -t  ---> to enable defalut certeficate
+
+- dotnet --info
+
+- dotnet restore
+
+- dotnet tool list -g
+
+- dotnet tool install --global dotnet-ef --version 5.0.3 (nuget.org/packages/dotnet-ef/)
+
+- dotnet tool update --global dotnet-ef --version 5.0.3
+
+- dotnet ef -h 
+
+- dotnet new classlib -o Core
+
+- dotnet add reference ../Infrastructure
+
+- dotnet build 
+
+- dotnet ef migrations add InitalCreate -o Data/Migrations
+why we need Design package
+our startup project 'API' doesn't reference Microsoft.EntityFrameworkCore.Design.
+ This package is required for the Entity Framework Core Tools to work.
+ Ensure your startup project is correct, install the package, and try again
+
+-  dotnet ef database update
+-  dotnet ef database -h
+
+
+-----
+vs setting
+generate
+this
+private
+exclude
