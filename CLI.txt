@@ -32,6 +32,10 @@
 
 - dotnet build 
 
+- dotnet ef database drop -p Infrastructure -s API
+- dotnet ef migrations remove  -p Infrastructure -s API
+- dotnet ef migrations add InitCreate -p Infrastructure -s API -o Data/Migrations
+
 - dotnet ef migrations add InitalCreate -o Data/Migrations
 why we need Design package
 our startup project 'API' doesn't reference Microsoft.EntityFrameworkCore.Design.
@@ -48,3 +52,5 @@ generate
 this
 private
 exclude
+
+--->shortcut prefernace +format
