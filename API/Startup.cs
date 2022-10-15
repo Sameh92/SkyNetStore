@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Helper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -33,10 +34,15 @@ namespace API
         {
 
             services.AddControllers();
-            services.AddDbContext<StoreContextDB>(options=>{
+            services.AddDbContext<StoreContextDB>(options =>
+            {
                 options.UseSqlite(_configuration.GetConnectionString("DefaultConnection"));
             });
-            services.AddScoped<IProductRepository,ProductRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            services.AddAutoMapper(typeof(MappingProfiles));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -56,6 +62,8 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseStaticFiles(); //To enable our API to serve Image and static contant 
 
             app.UseAuthorization();
 
