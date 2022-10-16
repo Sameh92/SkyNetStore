@@ -13,12 +13,14 @@ using API.Dtos;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using AutoMapper;
+using API.Errors;
+using Microsoft.AspNetCore.Http;
+using System.Runtime.CompilerServices;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+
+    public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> _productRepo;
         private readonly IGenericRepository<ProductBrand> _productBrandRepo;
@@ -54,10 +56,13 @@ namespace API.Controllers
             // }).ToList();
         }
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]  // to enhance swagger to till swagger this api return either ok or not found
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)] // to tell swagger waht we will return as response here APiResponse
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductWithTypesAndBrandsSpecification(id);
             var product = await _productRepo.GetEntityWithSpec(spec);
+            if (product == null) return NotFound(new ApiResponse(404));
             return Ok(_mapper.Map<Product, ProductToReturnDto>(product));
 
             //  return _mapper.Map<Product, ProductToReturnDto>(product);
