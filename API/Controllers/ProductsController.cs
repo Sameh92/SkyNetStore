@@ -16,6 +16,7 @@ using AutoMapper;
 using API.Errors;
 using Microsoft.AspNetCore.Http;
 using System.Runtime.CompilerServices;
+using API.Helper;
 
 namespace API.Controllers
 {
@@ -26,22 +27,26 @@ namespace API.Controllers
         private readonly IGenericRepository<ProductBrand> _productBrandRepo;
         private readonly IGenericRepository<ProductType> _productTypeRepo;
         private readonly IMapper _mapper;
+        private readonly StoreContextDB _context;
 
         public ProductsController(IGenericRepository<Product> productRepo, IGenericRepository<ProductBrand> productBrandRepo
-        , IGenericRepository<ProductType> productTypeRepo, IMapper mapper)
+        , IGenericRepository<ProductType> productTypeRepo, IMapper mapper, StoreContextDB context)
         {
             _productRepo = productRepo;
             _productBrandRepo = productBrandRepo;
             _productTypeRepo = productTypeRepo;
             _mapper = mapper;
+            _context=context;
         }
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProdcutSpecParams productParams)
         {
-            var spec = new ProductWithTypesAndBrandsSpecification();
+            var spec = new ProductWithTypesAndBrandsSpecification(productParams);
+            var countSpec = new ProductWithFilterForCountSpecification(productParams);
+            var totalItems = await _productRepo.CountAsync(countSpec);
             var products = await _productRepo.ListAsyncWitSpec(spec);
-
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex,productParams.PageSize,totalItems,data));
 
             //WITH OUT Auto Mapper
             // return products.Select(p => new ProductToReturnDto
@@ -55,6 +60,7 @@ namespace API.Controllers
             //     ProductType = p.ProductType.Name
             // }).ToList();
         }
+       
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]  // to enhance swagger to till swagger this api return either ok or not found
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)] // to tell swagger waht we will return as response here APiResponse

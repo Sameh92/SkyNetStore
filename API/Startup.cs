@@ -37,6 +37,13 @@ namespace API
 
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddSwaggerExtension();
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. and we use it to Vaildation error Response
@@ -52,7 +59,7 @@ namespace API
             app.UseRouting();
 
             app.UseStaticFiles(); //To enable our API to serve Image and static contant 
-
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
             app.UseSwaggerExtension();
             app.UseEndpoints(endpoints =>
