@@ -28,6 +28,7 @@ namespace API.Extensions
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IBasketRepository, BasketRepository>();
 
 
             //To configure and override our ApiController Attribute behavior and this configure must be after addController
