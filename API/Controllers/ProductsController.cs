@@ -43,7 +43,7 @@ namespace API.Controllers
         {
             var spec = new ProductWithTypesAndBrandsSpecification(productParams);
             var countSpec = new ProductWithFilterForCountSpecification(productParams);
-            var totalItems = await _productRepo.CountAsync(countSpec);
+            var totalItems = await _productRepo.CountAsync(spec);
             var products = await _productRepo.ListAsyncWitSpec(spec);
             var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
             return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex,productParams.PageSize,totalItems,data));

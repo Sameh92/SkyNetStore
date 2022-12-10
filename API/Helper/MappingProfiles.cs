@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Dtos;
 using AutoMapper;
 using Core.Entities;
+using Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace API.Helper
@@ -17,6 +18,7 @@ namespace API.Helper
             .ForMember(d => d.ProductBrand, o => o.MapFrom(s => s.ProductBrand.Name))
             .ForMember(d => d.ProductType, o => o.MapFrom(s => s.ProductType.Name))
             .ForMember(d => d.PictureUrl, o => o.MapFrom<ProductUrlReslover>());
+            CreateMap<Address, AddressDto>().ReverseMap();
 
 
         }

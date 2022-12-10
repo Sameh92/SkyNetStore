@@ -2,6 +2,7 @@ using API.Extensions;
 using API.Helper;
 using API.Middleware;
 using Infrastructure.Data;
+using Infrastructure.Data.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +29,16 @@ namespace API
 
             services.AddControllers();
 
-
+            // add Application dbcontext 
             services.AddDbContext<StoreContextDB>(options =>
             {
                 options.UseSqlite(_configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            // add Identity dbcontext 
+            services.AddDbContext<AppSamRanIdentityDbContext>(options =>
+            {
+                options.UseSqlite(_configuration.GetConnectionString("IdentityConnection"));
             });
 
             // add redis configuration 
@@ -44,7 +51,7 @@ namespace API
 
 
             services.addApplicationServices();
-
+            services.AddIdentityServices(_configuration);
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddSwaggerExtension();
             services.AddCors(opt =>
@@ -70,6 +77,7 @@ namespace API
 
             app.UseStaticFiles(); //To enable our API to serve Image and static contant 
             app.UseCors("CorsPolicy");
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseSwaggerExtension();
             app.UseEndpoints(endpoints =>
