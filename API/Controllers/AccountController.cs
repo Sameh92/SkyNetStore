@@ -57,6 +57,11 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegiserDto regiserDto)
         {
+            // inside the same controller we can deal with onther endpoint as a function 
+            if(CheckEmailExistAsync(regiserDto.Email).Result.Value) // Result.Value because of async
+            {
+                return new BadRequestObjectResult(new ApiValidationErrorResponse { Errors = new[] { "Email address is in use" } });
+            }
             var user = new AppUserSamRan
             {
                 DisplayName = regiserDto.DisplayName,

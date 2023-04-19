@@ -26,12 +26,14 @@ namespace API.Extensions
         public static IServiceCollection addApplicationServices(this IServiceCollection services)
         {
 
+            services.AddSingleton<IResponseCacheService, ResponseCacheService>();// to cach
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<ITokenService, TokenService>();
-
-
+            //services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderService, OrderServiceWithUnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             //To configure and override our ApiController Attribute behavior and this configure must be after addController
             services.Configure<ApiBehaviorOptions>(options =>
             {

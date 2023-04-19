@@ -38,6 +38,7 @@ namespace API.Controllers
             _mapper = mapper;
             _context=context;
         }
+        [Cached(600)]
         [HttpGet]
         public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProdcutSpecParams productParams)
         {
@@ -60,7 +61,7 @@ namespace API.Controllers
             //     ProductType = p.ProductType.Name
             // }).ToList();
         }
-       
+        [Cached(600)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]  // to enhance swagger to till swagger this api return either ok or not found
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)] // to tell swagger waht we will return as response here APiResponse
@@ -85,14 +86,14 @@ namespace API.Controllers
             //     ProductType = product.ProductType.Name
             // };
         }
-
+        [Cached(600)]
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands()
         {
             var brands = await _productBrandRepo.ListAllAsync();
             return Ok(brands);
         }
-
+        [Cached(600)]
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes()
         {
